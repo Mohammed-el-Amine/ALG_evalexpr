@@ -3,8 +3,10 @@
 /**
  * Gestion des opérations .
  */
+
 function addition($a, $b, &$result)
 {
+
     $result += $a + $b;
 }
 
@@ -29,25 +31,29 @@ function modulo($a, $b, &$result)
 }
 
 
-
 /**
  * Fonction main .
  */
+
 function eval_expr(string $expr)
 {
+    //variable contenant le resultat du calcul 
     $result = 0;
+
     //contenue de la recherche regex
     $matches = [];
 
     //regex servant a récuperer toutes les valeurs numerique y compris les decimaux compris entre les symbole de calcule
-    preg_match_all("/(?<!\d)[-]?\d*\.?\d+|[\\%\\+\\-\\/\\*\\(\\)]/", $expr, $matches);
-    //reinitialisation du tableau matches .
-    $matches = $matches[0];
-    //print_r($matches);
 
+    preg_match_all("/(?<!\d)[-]?\d*\.?\d+|[\\%\\+\\-\\/\\*\\(\\)]/", $expr, $matches);
+
+    //réinitialisation du tableau $matches .
+    $matches = $matches[0];
+
+    // Récupération 
     foreach ($matches as $index => $res) {
         if (!is_numeric($res)) {
-            //echo $index . " " . $res . "\n";
+
             if ($res == "+") {
                 addition($matches[$index - 1], $matches[$index + 1], $result);
             } elseif ($res == "-") {
@@ -59,7 +65,8 @@ function eval_expr(string $expr)
             } elseif ($res == "%") {
                 modulo($matches[$index - 1], $matches[$index + 1], $result);
             }
-            echo $result . "\n";
         }
     }
+    echo $result . "\n";
+
 }
