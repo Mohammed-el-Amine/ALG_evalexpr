@@ -37,36 +37,33 @@ function modulo($a, $b, &$result)
 
 function eval_expr(string $expr)
 {
-    //variable contenant le resultat du calcul 
+    //variable contenant le resultat du calcul .
     $result = 0;
 
-    //contenue de la recherche regex
+    //contenue de la recherche regex .
     $matches = [];
 
-    //regex servant a récuperer toutes les valeurs numerique y compris les decimaux compris entre les symbole de calcule
-
+    //regex servant a récuperer toutes les valeurs numerique y compris les decimaux compris entre les symboles de calcul .
     preg_match_all("/(?<!\d)[-]?\d*\.?\d+|[\\%\\+\\-\\/\\*\\(\\)]/", $expr, $matches);
 
     //réinitialisation du tableau $matches .
     $matches = $matches[0];
 
-    // Récupération 
     foreach ($matches as $index => $res) {
         if (!is_numeric($res)) {
 
-            if ($res == "+") {
+            if ($res === "+") {
                 addition($matches[$index - 1], $matches[$index + 1], $result);
-            } elseif ($res == "-") {
+            } elseif ($res === "-") {
                 soustration($matches[$index - 1], $matches[$index + 1], $result);
-            } elseif ($res == "/") {
+            } elseif ($res === "/") {
                 division($matches[$index - 1], $matches[$index + 1], $result);
-            } elseif ($res == "*") {
+            } elseif ($res === "*") {
                 multiplication($matches[$index - 1], $matches[$index + 1], $result);
-            } elseif ($res == "%") {
+            } elseif ($res === "%") {
                 modulo($matches[$index - 1], $matches[$index + 1], $result);
             }
         }
     }
-    echo $result . "\n";
-
+    return "$result\n";
 }
