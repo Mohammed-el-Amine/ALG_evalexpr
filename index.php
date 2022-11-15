@@ -4,30 +4,44 @@
  * Gestion des opérations .
  */
 
-function addition($a, $b, &$result)
+function addition($a, $b, &$result, $isFirstCalc)
 {
-
-    $result += $a + $b;
+    if (!$isFirstCalc)
+        $result += $b;
+    else
+        $result += $a + $b;
 }
 
-function soustration($a, $b, &$result)
+function soustration($a, $b, &$result, $isFirstCalc)
 {
-    $result += $a - $b;
+    if (!$isFirstCalc)
+        $result -= $b;
+    else
+        $result += $a - $b;
 }
 
-function division($a, $b, &$result)
+function division($a, $b, &$result, $isFirstCalc)
 {
-    $result += $a / $b;
+    if (!$isFirstCalc)
+        $result /= $b;
+    else
+        $result += $a / $b;
 }
 
-function multiplication($a, $b, &$result)
+function multiplication($a, $b, &$result, $isFirstCalc)
 {
-    $result += $a * $b;
+    if (!$isFirstCalc)
+        $result *= $b;
+    else
+        $result += $a * $b;
 }
 
-function modulo($a, $b, &$result)
+function modulo($a, $b, &$result, $isFirstCalc)
 {
-    $result += $a % $b;
+    if (!$isFirstCalc)
+        $result %= $b;
+    else
+        $result += $a % $b;
 }
 
 
@@ -42,6 +56,7 @@ function eval_expr(string $expr)
 
     //contenue de la recherche regex .
     $matches = [];
+    $isFirstCalc = true;
 
     //regex servant a récuperer toutes les valeurs numerique y compris les decimaux compris entre les symboles de calcul .
     preg_match_all("/(?<!\d)[-]?\d*\.?\d+|[\\%\\+\\-\\/\\*\\(\\)]/", $expr, $matches);
@@ -51,17 +66,20 @@ function eval_expr(string $expr)
 
     foreach ($matches as $index => $res) {
         if (!is_numeric($res)) {
-
             if ($res === "+") {
-                addition($matches[$index - 1], $matches[$index + 1], $result);
+                addition($matches[$index - 1], $matches[$index + 1], $result, $isFirstCalc);
+                $isFirstCalc = false;
             } elseif ($res === "-") {
-                soustration($matches[$index - 1], $matches[$index + 1], $result);
+                soustration($matches[$index - 1], $matches[$index + 1], $result, $isFirstCalc);
+                $isFirstCalc = false;
             } elseif ($res === "/") {
-                division($matches[$index - 1], $matches[$index + 1], $result);
+                division($matches[$index - 1], $matches[$index + 1], $result, $isFirstCalc);
+                $isFirstCalc = false;
             } elseif ($res === "*") {
-                multiplication($matches[$index - 1], $matches[$index + 1], $result);
+                multiplication($matches[$index - 1], $matches[$index + 1], $result, $isFirstCalc);
             } elseif ($res === "%") {
-                modulo($matches[$index - 1], $matches[$index + 1], $result);
+                modulo($matches[$index - 1], $matches[$index + 1], $result, $isFirstCalc);
+                $isFirstCalc = false;
             }
         }
     }
